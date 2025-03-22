@@ -5,7 +5,7 @@ import InputField from './InputField';
 interface EmailInputProps {}
 
 function EmailInput({}: EmailInputProps) {
-  const { control } = useFormContext();
+  const { control, setFocus } = useFormContext();
 
   return (
     <Controller
@@ -21,11 +21,17 @@ function EmailInput({}: EmailInputProps) {
       }}
       render={({ field: { value, onChange }, fieldState: { error } }) => (
         <InputField
+          autoFocus
           label="이메일"
           placeholder="이메일을 입력해주세요."
+          inputMode="email"
+          returnKeyType="next"
+          autoCapitalize="none"
+          submitBehavior="submit"
           value={value}
           error={error?.message}
           onChangeText={onChange}
+          onSubmitEditing={() => setFocus('password')}
         />
       )}
     />

@@ -20,11 +20,13 @@ function PasswordConfirmInput({}: PasswordConfirmInputProps) {
           if (data !== password) return '비밀번호가 일치하지 않습니다.';
         },
       }}
-      render={({ field: { value, onChange }, fieldState: { error } }) => (
+      render={({ field: { ref, value, onChange }, fieldState: { error } }) => (
         <InputField
-          secureTextEntry
+          ref={ref}
           label="비밀번호 확인"
           placeholder="비밀번호 확인을 입력해주세요."
+          textContentType="oneTimeCode"
+          secureTextEntry={true}
           value={value}
           error={error?.message}
           onChangeText={onChange}
