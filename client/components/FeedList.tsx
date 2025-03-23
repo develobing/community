@@ -1,57 +1,46 @@
-import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
-import FeedItem from './FeedItem';
 import { colors } from '@/constants';
+import useGetInfinitePosts from '@/hooks/queries/useGetInifinitePosts';
+import React, { useRef, useState } from 'react';
+import { FlatList, StyleSheet } from 'react-native';
+import FeedItem from './FeedItem';
+import { useScrollToTop } from '@react-navigation/native';
 
 interface FeedListProps {}
 
-const dummyPosts = [
-  {
-    id: 1,
-    userId: 1,
-    title: '더미 텍스트 타이틀 111',
-    description: '더미 텍스트 내용 asdf 111',
-    createdAt: '2025-01-01T00:00:00.000Z',
-    author: {
-      id: 5,
-      nickname: '닉네임',
-      imageUri: '',
-    },
-    imageUris: [],
-    likes: [],
-    hasVote: false,
-    voteCount: 1,
-    commentCount: 1,
-    viewCount: 1,
-  },
-  {
-    id: 2,
-    userId: 2,
-    title: '더미 텍스트 타이틀',
-    description:
-      '더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용더미 텍스트 내용',
-    createdAt: '2025-01-05T00:00:00.000Z',
-    author: {
-      id: 5,
-      nickname: '닉네임',
-      imageUri: '',
-    },
-    imageUris: [],
-    likes: [],
-    hasVote: false,
-    voteCount: 2,
-    commentCount: 2,
-    viewCount: 2,
-  },
-];
-
 function FeedList({}: FeedListProps) {
+  const {
+    data: posts,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    refetch,
+  } = useGetInfinitePosts();
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const ref = useRef<FlatList | null>(null);
+  useScrollToTop(ref);
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    await refetch();
+    setIsRefreshing(false);
+  };
+
+  const handleEndReached = () => {
+    if (!hasNextPage || isFetchingNextPage) return;
+    fetchNextPage();
+  };
+
   return (
     <FlatList
-      data={dummyPosts}
+      ref={ref}
+      data={posts?.pages.flat()}
       renderItem={({ item }) => <FeedItem post={item} />}
       keyExtractor={(item) => String(item.id)}
       contentContainerStyle={styles.contentContainer}
+      refreshing={isRefreshing}
+      onRefresh={handleRefresh}
+      onEndReached={handleEndReached}
+      onEndReachedThreshold={0.5}
     />
   );
 }
