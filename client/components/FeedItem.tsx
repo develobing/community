@@ -33,8 +33,8 @@ function FeedItem({ post, isDetail = false }: FeedItemProps) {
         destructiveButtonIndex,
         cancelButtonIndex,
       },
-      (index) => {
-        switch (index) {
+      (selectedIndex) => {
+        switch (selectedIndex) {
           case destructiveButtonIndex:
             deletePost.mutate(post.id, {
               onSuccess: () => {
