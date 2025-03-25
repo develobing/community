@@ -5,24 +5,82 @@ import { Octicons, MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import { Post } from '@/types';
 import Profile from './Profile';
 import useAuth from '@/hooks/queries/useAuth';
+import { useActionSheet } from '@expo/react-native-action-sheet';
+import useDeletePost from '@/hooks/queries/useDeletePost';
+import { router } from 'expo-router';
 
 interface FeedItemProps {
   post: Post;
+  isDetail?: boolean;
 }
 
-function FeedItem({ post }: FeedItemProps) {
+function FeedItem({ post, isDetail = false }: FeedItemProps) {
   const { auth } = useAuth();
+  const { showActionSheetWithOptions } = useActionSheet();
+  const deletePost = useDeletePost();
+
   const likeUsers = post.likes.map((like) => Number(like.userId));
   const isLiked = likeUsers?.includes(Number(auth?.id));
 
+  const handlePressOption = () => {
+    const options = ['삭제', '수정', '취소'];
+    const destructiveButtonIndex = 0;
+    const cancelButtonIndex = 2;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex,
+      },
+      (index) => {
+        switch (index) {
+          case destructiveButtonIndex:
+            deletePost.mutate(post.id, {
+              onSuccess: () => {
+                if (isDetail) {
+                  if (router.canGoBack()) router.back();
+                  else router.push('/');
+                }
+              },
+            });
+            break;
+          case 1:
+            router.push(`/post/update/${post.id}`);
+            break;
+          case cancelButtonIndex:
+            console.log('취소');
+            break;
+          default:
+            break;
+        }
+      }
+    );
+  };
+
+  const handlePressFeed = () => {
+    if (!isDetail) router.push(`/post/${post.id}`);
+  };
+
+  const ContainerComponent = isDetail ? View : Pressable;
+
   return (
-    <View style={styles.container}>
+    <ContainerComponent style={styles.container} onPress={handlePressFeed}>
       <View style={styles.contentContainer}>
         <Profile
           nickname={post.author.nickname}
           imageUri={post.author.imageUri}
           createdAt={post.createdAt}
-          onPress={() => {}}
+          option={
+            auth.id === post.author.id && (
+              <Ionicons
+                name="ellipsis-vertical"
+                size={24}
+                color={colors.BLACK}
+              />
+            )
+          }
+          onPress={handlePressOption}
         ></Profile>
 
         <Text style={styles.title}>{post.title}</Text>
@@ -55,13 +113,12 @@ function FeedItem({ post }: FeedItemProps) {
           <Text style={styles.menuText}>{post.viewCount}</Text>
         </Pressable>
       </View>
-    </View>
+    </ContainerComponent>
   );
 }
 
 const styles = StyleSheet.create({
   container: { backgroundColor: colors.WHITE },
-
   contentContainer: { padding: 16 },
   title: {
     fontSize: 16,

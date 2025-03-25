@@ -25,7 +25,7 @@ function Profile({
 }: ProfileProps) {
   return (
     <View style={styles.container}>
-      <Pressable style={styles.profileContainer} onPress={onPress}>
+      <Pressable style={styles.profileContainer}>
         <Image
           source={
             imageUri ? imageUri : require('@/assets/images/default-avatar.png')
@@ -39,7 +39,9 @@ function Profile({
         </View>
       </Pressable>
 
-      {option}
+      <Pressable style={styles.profileContainer} onPress={onPress}>
+        {option}
+      </Pressable>
     </View>
   );
 }

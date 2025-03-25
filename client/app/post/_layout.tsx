@@ -1,4 +1,4 @@
-import { Link, Stack } from 'expo-router';
+import { Link, router, Stack } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 import { colors } from '@/constants';
 
@@ -21,6 +21,38 @@ export default function PostLayout() {
             <Link replace href="/">
               <Feather name="arrow-left" size={28} color={colors.BLACK} />
             </Link>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="[id]"
+        options={{
+          headerTitle: '',
+          headerShown: true,
+          headerLeft: () => (
+            <Feather
+              name="arrow-left"
+              size={28}
+              color={colors.BLACK}
+              onPress={() =>
+                router.canGoBack() ? router.back() : router.replace('/')
+              }
+            />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="update/[id]"
+        options={{
+          title: '수정',
+          headerShown: true,
+          headerLeft: () => (
+            <Feather
+              name="arrow-left"
+              size={28}
+              color={colors.BLACK}
+              onPress={() => router.back()}
+            />
           ),
         }}
       />

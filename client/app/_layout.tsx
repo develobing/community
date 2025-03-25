@@ -7,6 +7,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import queryClient from '@/api/queryClient';
 import Toast from 'react-native-toast-message';
 import useAuth from '@/hooks/queries/useAuth';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -27,10 +28,12 @@ export default function RootLayout() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <RootNavigator />
-      <Toast />
-    </QueryClientProvider>
+    <ActionSheetProvider>
+      <QueryClientProvider client={queryClient}>
+        <RootNavigator />
+        <Toast />
+      </QueryClientProvider>
+    </ActionSheetProvider>
   );
 }
 
