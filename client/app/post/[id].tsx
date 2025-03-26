@@ -5,16 +5,18 @@ import { colors } from '@/constants';
 import useGetPost from '@/hooks/queries/useGetPost';
 import { useLocalSearchParams } from 'expo-router';
 import {
+  Keyboard,
   Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import useCreateComment from '@/hooks/queries/useCreateComment';
-import { useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import CommentItem from '@/components/CommentItem';
 
 export default function PostDetailScreen() {
@@ -22,17 +24,38 @@ export default function PostDetailScreen() {
   const { data: post, isPending, isError } = useGetPost(Number(id));
   const createComment = useCreateComment();
   const [content, setContent] = useState('');
+  const [parentCommentId, setParentCommentId] = useState<number | null>(null);
   const scrollRef = useRef<ScrollView | null>(null);
+  const inputRef = useRef<TextInput | null>(null);
 
   if (isPending || isError) {
     return <></>;
   }
+
+  const handleReply = (commentId: number) => {
+    setParentCommentId(commentId);
+    inputRef.current?.focus();
+  };
+
+  const handleCancelReply = () => {
+    setParentCommentId(null);
+    Keyboard.dismiss();
+  };
 
   const handleSubmitComment = () => {
     const commentData = {
       postId: post.id,
       content,
     };
+
+    // 댓글의 답글인 경우
+    if (parentCommentId) {
+      createComment.mutate({ ...commentData, parentCommentId });
+      setContent('');
+      handleCancelReply();
+      return;
+    }
+
     createComment.mutate(commentData);
     setContent('');
 
@@ -60,14 +83,28 @@ export default function PostDetailScreen() {
             </View>
 
             {post.comments?.map((comment) => (
-              <CommentItem key={comment.id} comment={comment} />
+              <Fragment key={comment.id}>
+                <CommentItem
+                  comment={comment}
+                  parentCommentId={parentCommentId}
+                  onReply={handleReply}
+                  onCancelReply={handleCancelReply}
+                />
+
+                {comment.replies?.map((reply) => (
+                  <CommentItem isReply key={reply.id} comment={reply} />
+                ))}
+              </Fragment>
             ))}
           </ScrollView>
 
           <View style={styles.commentInputContainer}>
             <InputField
+              ref={inputRef}
               returnKeyType="send"
-              placeholder="댓글을 남겨보세요."
+              placeholder={
+                parentCommentId ? '답글 남기는 중' : '댓글을 남겨보세요.'
+              }
               rightChild={
                 <Pressable
                   disabled={!content}

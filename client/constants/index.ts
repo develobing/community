@@ -7,6 +7,7 @@ const colors = {
   ORANGE_600: '#FF6B57',
   RED_100: '#FFDFDF',
   RED_500: '#FF5F5F',
+  GRAY_50: '#FCFCFC',
   GRAY_100: '#F6F6F6',
   GRAY_200: '#E2E8FO',
   GRAY_300: '#DID5DB',
