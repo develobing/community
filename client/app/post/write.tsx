@@ -1,6 +1,5 @@
 import CustomButton from '@/components/CustomButton';
 import DescriptionInput from '@/components/DescriptionInput';
-import FixedBottomCTA from '@/components/FixedBottomCTA';
 import TitleInput from '@/components/TitleInput';
 import useCreatePost from '@/hooks/queries/useCreatePost';
 import { ImageUri } from '@/types';
@@ -9,6 +8,8 @@ import React, { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import PostWriteFooter from '../../components/PostWriteFooter';
+import ImagePreviewList from '@/components/ImagePreviewList';
 
 interface writeProps {}
 
@@ -52,7 +53,10 @@ function write({}: writeProps) {
       <KeyboardAwareScrollView contentContainerStyle={styles.container}>
         <TitleInput />
         <DescriptionInput />
+        <ImagePreviewList imageUris={postForm.watch().imageUris} />
       </KeyboardAwareScrollView>
+
+      <PostWriteFooter />
     </FormProvider>
   );
 }
