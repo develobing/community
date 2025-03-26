@@ -1,18 +1,21 @@
+import queryClient from '@/api/queryClient';
+import useAuth from '@/hooks/queries/useAuth';
+import { useReactQueryDevTools } from '@dev-plugins/react-query';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
-import { QueryClientProvider } from '@tanstack/react-query';
-import queryClient from '@/api/queryClient';
 import Toast from 'react-native-toast-message';
-import useAuth from '@/hooks/queries/useAuth';
-import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  useReactQueryDevTools(queryClient);
+
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
