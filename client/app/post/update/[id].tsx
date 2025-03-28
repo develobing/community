@@ -1,16 +1,15 @@
 import CustomButton from '@/components/CustomButton';
 import DescriptionInput from '@/components/DescriptionInput';
-import FixedBottomCTA from '@/components/FixedBottomCTA';
 import TitleInput from '@/components/TitleInput';
-import useCreatePost from '@/hooks/queries/useCreatePost';
+import VoteAttached from '@/components/VoteAttached';
 import useGetPost from '@/hooks/queries/useGetPost';
+import useUpdatePost from '@/hooks/queries/useUpdatePost';
 import { ImageUri } from '@/types';
 import { router, useLocalSearchParams, useNavigation } from 'expo-router';
 import React, { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import useUpdatePost from '@/hooks/queries/useUpdatePost';
 
 interface PostUpdateScreenProps {}
 
@@ -18,6 +17,7 @@ type FormValues = {
   title: string;
   description: string;
   imageUris: ImageUri[];
+  isVoteAttached: boolean;
 };
 
 function PostUpdateScreen({}: PostUpdateScreenProps) {
@@ -31,6 +31,7 @@ function PostUpdateScreen({}: PostUpdateScreenProps) {
       title: post?.title,
       description: post?.description,
       imageUris: post?.imageUris,
+      isVoteAttached: post?.hasVote,
     },
   });
 
@@ -47,6 +48,7 @@ function PostUpdateScreen({}: PostUpdateScreenProps) {
         title: post.title,
         description: post.description,
         imageUris: post.imageUris,
+        isVoteAttached: post.hasVote,
       });
     }
   }, [post]);
@@ -69,6 +71,7 @@ function PostUpdateScreen({}: PostUpdateScreenProps) {
       <KeyboardAwareScrollView contentContainerStyle={styles.container}>
         <TitleInput />
         <DescriptionInput />
+        <VoteAttached />
       </KeyboardAwareScrollView>
     </FormProvider>
   );
