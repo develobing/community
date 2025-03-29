@@ -1,0 +1,7 @@
+# dependencies
+
+node_modules
+
+# service keys
+
+_-firebase-_.json

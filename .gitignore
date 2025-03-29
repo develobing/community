@@ -1,2 +1,6 @@
 # dependencies
 node_modules
+
+# service keys
+/client/*-firebase-*.json
+google-services.json
