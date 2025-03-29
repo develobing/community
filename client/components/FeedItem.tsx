@@ -97,10 +97,13 @@ function FeedItem({ post, isDetail = false }: FeedItemProps) {
                 name="ellipsis-vertical"
                 size={24}
                 color={colors.BLACK}
+                onPress={handlePressOption}
               />
             )
           }
-          onPress={handlePressOption}
+          onPress={() => {
+            router.push(`/profile/${post.author.id}`);
+          }}
         ></Profile>
 
         <Text style={styles.title}>{post.title}</Text>

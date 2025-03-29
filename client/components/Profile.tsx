@@ -1,47 +1,45 @@
 import { colors } from '@/constants';
 import React, { ReactNode } from 'react';
-import { Image, Pressable, StyleSheet, View, Text } from 'react-native';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/ko';
-
 dayjs.extend(relativeTime);
 dayjs.locale('ko');
 
 interface ProfileProps {
-  imageUri?: string;
+  onPress: () => void;
   nickname: string;
-  createdAt?: string;
+  imageUri?: string;
+  createdAt: string;
   option?: ReactNode;
-  onPress?: () => void;
 }
 
 function Profile({
+  onPress,
   imageUri,
   nickname,
   createdAt,
   option,
-  onPress,
 }: ProfileProps) {
   return (
     <View style={styles.container}>
-      <Pressable style={styles.profileContainer}>
+      <Pressable style={styles.profileContainer} onPress={onPress}>
         <Image
           source={
-            imageUri ? imageUri : require('@/assets/images/default-avatar.png')
+            imageUri
+              ? { uri: imageUri }
+              : require('@/assets/images/default-avatar.png')
           }
           style={styles.avatar}
         />
-
-        <View style={styles.textContainer}>
+        <View style={{ gap: 4 }}>
           <Text style={styles.nickname}>{nickname}</Text>
           <Text style={styles.createdAt}>{dayjs(createdAt).fromNow()}</Text>
         </View>
       </Pressable>
 
-      <Pressable style={styles.profileContainer} onPress={onPress}>
-        {option}
-      </Pressable>
+      {option}
     </View>
   );
 }
@@ -53,17 +51,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-
   profileContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
   },
-
-  textContainer: {
-    gap: 4,
-  },
-
   avatar: {
     width: 50,
     height: 50,
@@ -71,13 +63,11 @@ const styles = StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: colors.GRAY_300,
   },
-
   nickname: {
     fontSize: 15,
     fontWeight: 'bold',
     color: colors.BLACK,
   },
-
   createdAt: {
     fontSize: 14,
     color: colors.GRAY_500,
