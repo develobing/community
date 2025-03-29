@@ -18,6 +18,7 @@ const colors = {
 
 const queryKeys = {
   AUTH: 'auth',
+  AVATAR: 'avatar',
   GET_ME: 'getMe',
   POST: 'post',
   GET_POSTS: 'getPosts',
