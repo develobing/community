@@ -52,7 +52,8 @@
     "react-native-pager-view": "6.5.1",
     "react-native-svg": "15.8.0",
     "expo-notifications": "~0.29.14",
-    "expo-device": "~7.0.2"
+    "expo-device": "~7.0.2",
+    "expo-dev-client": "~5.0.15"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
