@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
 import * as Notifications from 'expo-notifications';
+import useNotificationObserver from '@/hooks/useNotificationObserver';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -51,6 +52,7 @@ export default function RootLayout() {
 
 function RootNavigator() {
   const { auth } = useAuth();
+  useNotificationObserver();
 
   useEffect(() => {
     const { id, nickname } = auth;
