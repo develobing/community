@@ -12,6 +12,7 @@ function CustomButton({
   label,
   size = 'large',
   variant = 'filled',
+  disabled,
   ...props
 }: CustomButtonProps) {
   return (
@@ -20,11 +21,12 @@ function CustomButton({
         styles.container,
         styles[size],
         styles[variant],
+        disabled && styles.disabled,
         pressed && styles.pressed,
       ]}
       {...props}
     >
-      <Text style={styles[variant]}>{label}</Text>
+      <Text style={styles[`${variant}Text`]}>{label}</Text>
     </Pressable>
   );
 }
@@ -42,17 +44,23 @@ const styles = StyleSheet.create({
   medium: {},
   filled: {
     backgroundColor: colors.ORANGE_600,
+  },
+  standard: {},
+  filledText: {
     fontSize: 14,
     fontWeight: 'bold',
     color: colors.WHITE,
   },
-  standard: {
+  standardText: {
     fontSize: 14,
     fontWeight: 'bold',
     color: colors.ORANGE_600,
   },
   pressed: {
     opacity: 0.8,
+  },
+  disabled: {
+    backgroundColor: colors.GRAY_300,
   },
 });
 
