@@ -47,7 +47,7 @@ function useLikePost() {
 
     onError: (error, newPost, context) => {
       queryClient.setQueryData(
-        [queryKeys.POST, queryKeys.GET_POST, context],
+        [queryKeys.POST, queryKeys.GET_POST, context?.previousPost?.id],
         context?.previousPost
       );
     },
