@@ -16,6 +16,7 @@ import CustomButton from '@/components/CustomButton';
 import PagerView from 'react-native-pager-view';
 import MyFeedList from '@/components/MyFeedList';
 import LikedFeedList from '@/components/LikedFeedList';
+import { router } from 'expo-router';
 
 export default function MyScreen() {
   const { auth } = useAuth();
@@ -48,6 +49,7 @@ export default function MyScreen() {
           variant="outlined"
           label="프로필 편집"
           style={{ position: 'absolute', right: 16, bottom: 16 }}
+          onPress={() => router.push('/profile/update')}
         />
       </View>
 

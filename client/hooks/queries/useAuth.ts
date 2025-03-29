@@ -1,4 +1,4 @@
-import { getMe, postLogin, postSignup } from '@/api/auth';
+import { editProfile, getMe, postLogin, postSignup } from '@/api/auth';
 import queryClient from '@/api/queryClient';
 import { queryKeys } from '@/constants';
 import { removeHeader, setHeader } from '@/utils/header';
@@ -10,28 +10,6 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
-
-function useSignup() {
-  return useMutation({
-    mutationFn: postSignup,
-    onSuccess: () => router.replace('/auth/login'),
-    onError: () => {},
-    onSettled: () => {},
-  });
-}
-
-function useLogin() {
-  return useMutation({
-    mutationFn: postLogin,
-    onSuccess: async ({ accessToken }) => {
-      setHeader('Authorization', `Bearer ${accessToken}`);
-      await saveSecureStore('accessToken', accessToken);
-      queryClient.fetchQuery({ queryKey: [queryKeys.AUTH, queryKeys.GET_ME] });
-      router.replace('/');
-    },
-    onError: () => {},
-  });
-}
 
 function useGetMe() {
   const { data, isError, isSuccess } = useQuery({
@@ -58,15 +36,50 @@ function useGetMe() {
   return { data };
 }
 
+function useLogin() {
+  return useMutation({
+    mutationFn: postLogin,
+    onSuccess: async ({ accessToken }) => {
+      setHeader('Authorization', `Bearer ${accessToken}`);
+      await saveSecureStore('accessToken', accessToken);
+      queryClient.fetchQuery({ queryKey: [queryKeys.AUTH, queryKeys.GET_ME] });
+      router.replace('/');
+    },
+    onError: () => {
+      //
+    },
+  });
+}
+
+function useSignup() {
+  return useMutation({
+    mutationFn: postSignup,
+    onSuccess: () => router.replace('/auth/login'),
+    onError: () => {
+      //
+    },
+  });
+}
+
+function useUpdateProfile() {
+  return useMutation({
+    mutationFn: editProfile,
+    onSuccess: (newProfile) => {
+      queryClient.setQueryData([queryKeys.AUTH, queryKeys.GET_ME], newProfile);
+    },
+  });
+}
+
 function useAuth() {
+  const { data } = useGetMe();
   const loginMutation = useLogin();
   const signupMutation = useSignup();
-  const { data } = useGetMe();
+  const profileMutation = useUpdateProfile();
 
   const logout = () => {
     removeHeader('Authorization');
     deleteSecureStore('accessToken');
-    queryClient.resetQueries({ queryKey: ['auth'] });
+    queryClient.resetQueries({ queryKey: [queryKeys.AUTH] });
   };
 
   return {
@@ -78,6 +91,7 @@ function useAuth() {
     },
     loginMutation,
     signupMutation,
+    profileMutation,
     logout,
   };
 }
