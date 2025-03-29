@@ -21,6 +21,8 @@ const queryKeys = {
   GET_ME: 'getMe',
   POST: 'post',
   GET_POSTS: 'getPosts',
+  GET_LIKED_POSTS: 'getLikedPosts',
+  GET_MY_POSTS: 'getMyPosts',
   GET_POST: 'getPost',
 };
 
