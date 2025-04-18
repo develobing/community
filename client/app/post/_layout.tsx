@@ -1,6 +1,7 @@
 import { Link, router, Stack } from 'expo-router';
 import { Feather } from '@expo/vector-icons';
 import { colors } from '@/constants';
+import MyScreen from '../(tabs)/my/index';
 
 export default function PostLayout() {
   return (
@@ -54,6 +55,12 @@ export default function PostLayout() {
               onPress={() => router.back()}
             />
           ),
+        }}
+      />
+      <Stack.Screen
+        name="search"
+        options={{
+          headerShown: false,
         }}
       />
     </Stack>

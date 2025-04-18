@@ -31,6 +31,14 @@ async function getLikedPosts(page = 1): Promise<Post[]> {
   return data;
 }
 
+async function getSearchPosts(page = 1, query: string): Promise<Post[]> {
+  const { data } = await axiosInstance.get(
+    `/posts/search?query=${query}&page=${page}`
+  );
+
+  return data;
+}
+
 async function deletePost(id: number): Promise<number> {
   const { data } = await axiosInstance.delete(`/posts/${id}`);
 
@@ -80,6 +88,7 @@ export {
   createVote,
   likePost,
   getMyPosts,
+  getSearchPosts,
   getLikedPosts,
   getUserPosts,
 };

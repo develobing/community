@@ -26,6 +26,7 @@ const queryKeys = {
   GET_MY_POSTS: 'getMyPosts',
   GET_POST: 'getPost',
   GET_USER_PROFILE: 'getUserProfile',
+  GET_SEARCH_POSTS: 'getSearchPosts',
 };
 
 export { colors, queryKeys };
