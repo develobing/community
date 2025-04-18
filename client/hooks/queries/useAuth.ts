@@ -8,8 +8,16 @@ import {
   saveSecureStore,
 } from '@/utils/secureStore';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { router } from 'expo-router';
 import { useEffect } from 'react';
+import Toast from 'react-native-toast-message';
+
+type ResponseError = AxiosError<{
+  statusCode: number;
+  message: string;
+  error: string;
+}>;
 
 function useGetMe() {
   const { data, isError, isSuccess } = useQuery({
@@ -45,8 +53,11 @@ function useLogin() {
       queryClient.fetchQuery({ queryKey: [queryKeys.AUTH, queryKeys.GET_ME] });
       router.replace('/');
     },
-    onError: () => {
-      //
+    onError: (error: ResponseError) => {
+      Toast.show({
+        type: 'error',
+        text1: error.response?.data.message,
+      });
     },
   });
 }
@@ -55,8 +66,11 @@ function useSignup() {
   return useMutation({
     mutationFn: postSignup,
     onSuccess: () => router.replace('/auth/login'),
-    onError: () => {
-      //
+    onError: (error: ResponseError) => {
+      Toast.show({
+        type: 'error',
+        text1: error.response?.data.message,
+      });
     },
   });
 }
