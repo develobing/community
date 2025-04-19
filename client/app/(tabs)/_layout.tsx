@@ -18,6 +18,9 @@ export default function TabLayout() {
         name="index"
         options={{
           title: t('Home'),
+          tabBarLabelStyle: {
+            fontFamily: 'Nanum Square Round',
+          },
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'home-sharp' : 'home-outline'}
@@ -31,6 +34,9 @@ export default function TabLayout() {
         name="my"
         options={{
           title: t('Profile'),
+          tabBarLabelStyle: {
+            fontFamily: 'Nanum Square Round',
+          },
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'person-circle' : 'person-circle-outline'}
@@ -44,6 +50,9 @@ export default function TabLayout() {
         name="setting"
         options={{
           title: t('Setting'),
+          tabBarLabelStyle: {
+            fontFamily: 'Nanum Square Round',
+          },
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'settings-sharp' : 'settings-outline'}
