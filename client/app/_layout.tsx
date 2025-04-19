@@ -11,6 +11,12 @@ import 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
 import * as Notifications from 'expo-notifications';
 import useNotificationObserver from '@/hooks/useNotificationObserver';
+import i18n from 'i18next';
+import { initReactI18next, useTranslation } from 'react-i18next';
+import { getLocales } from 'expo-localization';
+import { Settings } from 'react-native';
+import resources from '@/i18n/resources';
+import { getSecureStore } from '@/utils/secureStore';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -50,9 +56,32 @@ export default function RootLayout() {
   );
 }
 
+const deviceLanguage = getLocales()[0].languageCode ?? 'ko';
+
+i18n.use(initReactI18next).init({
+  resources: resources,
+  lng: deviceLanguage,
+  fallbackLng: 'ko-Kr',
+});
+
 function RootNavigator() {
   const { auth } = useAuth();
+  const { t } = useTranslation();
+
   useNotificationObserver();
+
+  useEffect(() => {
+    const loadLanguage = async () => {
+      const savedLanguage =
+        (await getSecureStore('language')) ?? deviceLanguage;
+
+      if (savedLanguage && savedLanguage !== deviceLanguage) {
+        i18n.changeLanguage(savedLanguage);
+      }
+    };
+
+    loadLanguage();
+  }, [i18n]);
 
   useEffect(() => {
     const { id, nickname } = auth;
@@ -60,7 +89,9 @@ function RootNavigator() {
     if (id)
       Toast.show({
         type: 'success',
-        text1: `${nickname ?? '회원'}님 환영합니다!`,
+        text1: t('Welcome Message', {
+          nickname: nickname ?? '회원',
+        }),
       });
   }, [auth.id]);
 

@@ -20,7 +20,9 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["android.permission.RECORD_AUDIO"],
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
       "package": "dev.robin.community",
       "googleServicesFile": "./google-services.json"
     },
@@ -41,7 +43,8 @@
         }
       ],
       "expo-secure-store",
-      "expo-image-picker"
+      "expo-image-picker",
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true
